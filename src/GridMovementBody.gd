@@ -8,7 +8,7 @@ extends Node2D
 @onready var direction_ray: RayCast2D = RayCast2D.new()
 @onready var tween: Tween
 
-var bias: int = cell_size / 2
+var bias: int = int(cell_size / 2.0)
 var next_tile_cords: Vector2 = position.snapped(Vector2(bias, bias))
 
 var direction:Vector2
@@ -20,7 +20,8 @@ var input_queue:Vector2 = Vector2.ZERO
 func _ready() -> void:
 	add_child(direction_ray)
 
-func _physics_process(delta: float) -> void:
+@warning_ignore("unused_parameter")
+func _process(delta: float) -> void:
 	direction = Input.get_vector("ui_left","ui_right","ui_up","ui_down")
 	
 	direction = direction.sign()
@@ -69,11 +70,14 @@ func move_character():
 		if tween.is_running(): 
 			return
 		tween.kill()
+		print("tween killed")
 	tween = create_tween()
 
 	var dist = position.distance_to(next_tile_cords)
 	var duration = dist / speed
 
 	tween.tween_property(self, "position", next_tile_cords, duration)
+	print("tween started")
+	
 
 		
